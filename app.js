@@ -6,40 +6,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var oauthIds = require('./config/oauth');
-var passport = require('passport')
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var apis = require('./routes/api/index');
+var apis = require('./routes/apis');
 
 var app = express();
 
 mongoose.connect(config.dbstring);
-
-// Passport setup
-// serialize and deserialize
-passport.serializeUser(function(user, done) {
-done(null, user);
-});
-passport.deserializeUser(function(obj, done) {
-done(null, obj);
-});
-
-// 1. passport for google
-passport.use(new GoogleStrategy({
-    clientID:     oauthIds.google.clientId,
-    clientSecret: oauthIds.google.clientSecret,
-    callbackURL: "http://localhost:3000/auth/google/callback",
-    passReqToCallback   : true
-  },
-  function(request, accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      return done(null, profile);
- });
-  }
-));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,20 +27,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var isAuthenticated = function(req, res, next) {
+  // TODO: This should check if the user needs authentication for the specified url
+  // (We would need the user to be authenticated for almost all scnearios except a
+  // few e.g. adding a new user)
+  
+  // for now it does not do anything
+  /*
+  if (req.url.match(some_regex_for_urls_to_skip)) next()
+  else {
+    \\ do stuff...
+    next()
+  }
+  */
+  next();
+}
+
+app.use(isAuthenticated);
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/api', apis);
-// routes for social authentication
-app.get('/auth/google',
-  passport.authenticate('google', { scope: 
-    [ 'https://www.googleapis.com/auth/plus.login',
-    , 'https://www.googleapis.com/auth/plus.profile.emails.read' ] }
-));
-app.get( '/auth/google/callback', 
-    passport.authenticate( 'google', { 
-        successRedirect: '/auth/google/success',
-        failureRedirect: '/auth/google/failure'
-}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
