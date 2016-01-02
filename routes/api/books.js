@@ -1,7 +1,9 @@
 var express = require('express');
+var Q = require('q');
 var AvailableBook = require('../../models/AvailableBook');
 var BookTransaction = require('../../models/BookTransaction');
 var Exceptions = require('../../common/exceptions');
+var bookHelper = require('../../scripts/bookHelper');
 var router = express.Router();
 
 /* GET books listing. */
@@ -15,7 +17,7 @@ router.get('/availableBooks', function(req, res, next) {
 router.post('/availableBooks/add', function(req, res, next) {
 	var book;
 	try {
-		book = getAvailableBookFromJson(req.body);
+		book = bookHelper.getAvailableBookFromJson(req.body);
 	}
 	catch (exception) {
 		// Invalid book data
@@ -24,7 +26,7 @@ router.post('/availableBooks/add', function(req, res, next) {
 		return;
 	}
     try {
-        addBookToAvailableBooks(book);
+        bookHelper.addBookToAvailableBooks(book);
         res.json({ success: true });
     }
     catch(error) {
@@ -33,47 +35,30 @@ router.post('/availableBooks/add', function(req, res, next) {
     }
 });
 
-function addBookToAvailableBooks(book) {
-    // Given the jsonObj for book, adds the given book to list of available books
-	if(book) {
-	  	book.save(function(err) {
-		    if (err) {
-		    	throw err;
-		    }
-
-		    console.log('Book "' + book.bookId + '" added with providerId "' + book.providerId + '"');
-	  	});
-	}
-}
-
-function getAvailableBookFromJson(jsonObj) {
-	// Parses the jsonObj to check if it is in valid format
-	if(jsonObj)
-	{
-		if(jsonObj.bookId
-			&& jsonObj.providerId
-			&& jsonObj.location
-			&& jsonObj.location.city
-			&& jsonObj.location.longitude
-			&& jsonObj.location.latitude) {
-			return new AvailableBook({
-				bookId: jsonObj.bookId,
-				providerId: jsonObj.providerId,
-				location: {
-					city: jsonObj.location.city,
-					longitude: jsonObj.location.longitude,
-					latitude: jsonObj.location.latitude,
-				}
-			});
-		}
-	}
-	throw new Exceptions.DataInvalidException("The provided data for adding book is incorrect");
-}
-
+/* Get all the transactions */
 router.get('/BookTransaction', function(req, res, next) {
 	BookTransaction.find({}, function(err, transactions) {
 		res.json(transactions);
 	});
+});
+
+/* Request for a book */
+router.post('/request', function(req, res, next) {
+    var availableBookRecordId = bookHelper.getAvailableBookRecordIdFromJson(req.body);
+    var getTransactionPromise = bookHelper.getBookTransactionFromJson(req.body, availableBookRecordId);
+    
+    getTransactionPromise.then(function(transaction) {
+        bookHelper.addBookTransaction(transaction, availableBookRecordId).then(function () {
+            res.json({success: true});
+        }, function(err) {
+            res.status(500);
+            res.json(err);
+        });
+    }, function (err) {
+        // Invalid book data
+		res.status(400);
+		res.json(err.message);
+    });
 });
 
 module.exports = router;

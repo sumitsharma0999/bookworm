@@ -39,7 +39,6 @@ function getUserObjectFromJson(jsonObj) {
 	if(jsonObj)
 	{
 		var userName, password;
-		var user = new User();
 
 		userName = jsonObj.userName;
 		password = jsonObj.password;
