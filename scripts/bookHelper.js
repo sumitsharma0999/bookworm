@@ -1,6 +1,7 @@
 var Exceptions = require('../common/exceptions');
 var AvailableBook = require('../models/AvailableBook');
 var BookTransaction = require('../models/BookTransaction');
+var GeoLocationHelper = require('./geoLocationHelper');
 var Q = require('q');
 
 function addBookToAvailableBooks(book) {
@@ -123,10 +124,81 @@ function addBookTransaction(transaction, availableBookRecordId) {
     return deferred.promise;
 }
 
+/* Search Request
+e.g.
+{
+    "bookId": "ISBN:89343943943",
+    "location": {
+        "city": "Delhi",
+        "longitude": 70.123456,
+        "latitude": 67.000000
+    }
+    "maxDistance": 2000    // In meters
+}
+*/
+function SearchRequest(bookId, city, longitude, latitude, maxDistance) {
+    this.bookId = bookId;
+    this.maxDistance = maxDistance || SearchRequest.prototype.defaultMaxDistance;
+    this.location = {};
+    this.location.city = city;
+    this.location.longitude = longitude;
+    this.location.latitude = latitude;
+}
+
+SearchRequest.prototype.defaultMaxDistance = 3000;
+
+// Takes query parameters object and creates a SearchRequest object from it
+// Throws error if data is not in valid format
+SearchRequest.prototype.fromQueryParams = function fromJSON(queryParams) {
+    if(queryParams) {
+        if(queryParams.bookId
+        && queryParams.city
+        && queryParams.longitude
+        && queryParams.latitude
+        // && queryParams.maxDistance   // maxDistance is an optional parameter
+        ) {
+            return new SearchRequest(queryParams.bookId,
+                queryParams.city,
+                parseFloat(queryParams.longitude),
+                parseFloat(queryParams.latitude),
+                parseFloat(queryParams.maxDistance));
+        }
+    }
+    throw new Exceptions.DataInvalidException("Invalid Search Request");
+};
+
+/*
+ Search for given book near given location, in the given city, within given distance.
+ Returns promise to give array of locations with distance (sorted by distance)
+*/
+function getSearchResults(searchRequest) {
+    var deferred = Q.defer();
+    
+    if(searchRequest) {
+        // Get available books with given id which are in the same city, and select their record id and locations.
+        AvailableBook.find({'bookId': searchRequest.bookId, 'location.city': searchRequest.location.city}, '_id location').lean().exec(function(err, results){
+           if(err) {
+               deferred.reject("Internal Server Error");
+           }
+           
+           // Process results first to convert from Mongoose model objects into normal javascript objects
+           var closePlaces= GeoLocationHelper.findClosePlaces(searchRequest, results, searchRequest.maxDistance);
+           deferred.resolve(closePlaces);
+        });
+    }
+    else {
+        deferred.reject("Invalid request");
+    }
+    
+    return deferred.promise;
+}
+
 module.exports = {
     addBookToAvailableBooks: addBookToAvailableBooks,
     getAvailableBookFromJson: getAvailableBookFromJson,
     getBookTransactionFromJson: getBookTransactionFromJson,
     getAvailableBookRecordIdFromJson: getAvailableBookRecordIdFromJson,
-    addBookTransaction: addBookTransaction
+    addBookTransaction: addBookTransaction,
+    SearchRequest: SearchRequest,
+    getSearchResults: getSearchResults
 };
