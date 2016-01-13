@@ -39,7 +39,7 @@ var isAuthenticated = function(req, res, next) {
   }
   */
   next();
-}
+};
 
 app.use(isAuthenticated);
 

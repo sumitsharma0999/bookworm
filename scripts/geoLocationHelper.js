@@ -34,9 +34,9 @@ function findClosePlaces(source, places, maxDistance) {
     
     if(places) {
         places.forEach(function (place, index){
-            var dist = distance(source.location.latitude, source.location.longitude, place.location.latitude, place.location.longitude)
+            var dist = distance(source.location.latitude, source.location.longitude, place.location.latitude, place.location.longitude);
             if(dist <= maxDistance) {
-                place["distance"] = dist;
+                place.distance = dist;
                 results.push(place);
             }
         });
@@ -57,4 +57,4 @@ function findClosePlaces(source, places, maxDistance) {
 
 module.exports = {
     findClosePlaces: findClosePlaces
-}
+};

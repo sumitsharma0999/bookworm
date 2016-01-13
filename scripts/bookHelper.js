@@ -21,13 +21,13 @@ function getAvailableBookFromJson(jsonObj) {
 	// Parses the jsonObj to check if it is in valid format
 	if(jsonObj)
 	{
-		if(jsonObj.bookId
-			&& jsonObj.providerId
-			&& jsonObj.location
-			&& jsonObj.location.city
-			&& jsonObj.location.longitude
-			&& jsonObj.location.latitude) {
-			return new AvailableBook({
+		if(jsonObj.bookId &&
+           jsonObj.providerId &&
+           jsonObj.location &&
+           jsonObj.location.city &&
+           jsonObj.location.longitude &&
+           jsonObj.location.latitude) {
+            return new AvailableBook({
 				bookId: jsonObj.bookId,
 				providerId: jsonObj.providerId,
 				location: {
@@ -151,10 +151,10 @@ SearchRequest.prototype.defaultMaxDistance = 3000;
 // Throws error if data is not in valid format
 SearchRequest.prototype.fromQueryParams = function fromJSON(queryParams) {
     if(queryParams) {
-        if(queryParams.bookId
-        && queryParams.city
-        && queryParams.longitude
-        && queryParams.latitude
+        if(queryParams.bookId &&
+           queryParams.city &&
+           queryParams.longitude &&
+           queryParams.latitude
         // && queryParams.maxDistance   // maxDistance is an optional parameter
         ) {
             return new SearchRequest(queryParams.bookId,

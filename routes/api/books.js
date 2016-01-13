@@ -75,7 +75,7 @@ router.get('/search', function(req, res, next) {
         }, function(err) {
             res.status(500);
             res.json(err);
-        })
+        });
     }
     catch (error) {
         res.status(400);
