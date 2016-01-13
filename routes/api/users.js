@@ -17,7 +17,6 @@ router.post('/addUser', function(req, res, next) {
 
 	var user = getUserObjectFromJson(req.body);
 	if(user) {
-
 		// save the sample user
 	  	user.save(function(err) {
 		    if (err) {

@@ -7,9 +7,9 @@ var Q = require('q');
 function addBookToAvailableBooks(book) {
     // Given the AvailableBook object, adds the given book to list of available books
 	if(book) {
-	  	book.save(function(err) {
-		    if (err) {
-		    	throw err;
+        book.save(function(err) {
+            if (err) {
+                throw err;
 		    }
 
 		    console.log('Book "' + book.bookId + '" added with providerId "' + book.providerId + '"');
