@@ -145,7 +145,7 @@ function SearchRequest(bookId, city, longitude, latitude, maxDistance) {
     this.location.latitude = latitude;
 }
 
-SearchRequest.prototype.defaultMaxDistance = 3000;
+SearchRequest.defaultMaxDistance = 3000;
 
 // Takes query parameters object and creates a SearchRequest object from it
 // Throws error if data is not in valid format
@@ -176,13 +176,13 @@ function getSearchResults(searchRequest) {
     
     if(searchRequest) {
         // Get available books with given id which are in the same city, and select their record id and locations.
+        // 'lean' is required to convert from Mongoose model objects into normal javascript objects
         AvailableBook.find({'bookId': searchRequest.bookId, 'location.city': searchRequest.location.city}, '_id location').lean().exec(function(err, results){
            if(err) {
                deferred.reject("Internal Server Error");
            }
            
-           // Process results first to convert from Mongoose model objects into normal javascript objects
-           var closePlaces= GeoLocationHelper.findClosePlaces(searchRequest, results, searchRequest.maxDistance);
+           var closePlaces = GeoLocationHelper.findClosePlaces(searchRequest, results, SearchRequest.defaultMaxDistance);
            deferred.resolve(closePlaces);
         });
     }

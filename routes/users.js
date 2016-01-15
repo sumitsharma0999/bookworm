@@ -1,5 +1,5 @@
 var express = require('express');
-var User = require('../models/user');
+var User = require('../models/User');
 var router = express.Router();
 
 /* GET users listing. */
@@ -25,6 +25,6 @@ router.post('/', function(req, res, next) {
 	    console.log('User saved successfully');
 	    res.json({ success: true });
   	});
-})
+});
 
 module.exports = router;

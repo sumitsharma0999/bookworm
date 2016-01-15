@@ -5,6 +5,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -25,23 +26,44 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var isAuthenticated = function(req, res, next) {
-  // TODO: This should check if the user needs authentication for the specified url
-  // (We would need the user to be authenticated for almost all scnearios except a
-  // few e.g. adding a new user)
+var checkForAuthentication = function(req, res, next) {
+    // TODO: This should check if the user needs authentication for the specified url
+    // (We would need the user to be authenticated for almost all scnearios except a
+    // few e.g. adding a new user)
   
-  // for now it does not do anything
-  /*
-  if (req.url.match(some_regex_for_urls_to_skip)) next()
-  else {
-    \\ do stuff...
-    next()
-  }
-  */
-  next();
+    if(config.enableRouteProtection) {
+        if(req.url !== '/api/users/addUser' &&
+           req.url !== '/api/users/authenticate') {
+            // requester should provide an access token
+            var token = req.headers['x-access-token'];
+
+            if(token) {
+                jwt.verify(token, config.jwtSecret, function(err, decoded) {
+                    if (err) {
+                        res.status(403);
+                        return res.json({ success: false, message: 'Failed to authenticate token.' });
+                    } else {
+                        // if everything is good, save to request for use in other routes
+                        req.decoded = decoded;
+                        next();
+                    }
+                });
+            } else {
+                res.status(403); // Permission denied
+                res.json({ success: false, message: 'You should be logged in first' });
+            }
+        }
+        else {
+            // Authentication is not required.
+           next();
+        }
+    }
+    else {
+        next();
+    }
 };
 
-app.use(isAuthenticated);
+app.use(checkForAuthentication);
 
 app.use('/', routes);
 app.use('/users', users);
