@@ -3,7 +3,6 @@ var User = require('../models/User');
 var Q = require('q');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
-var config = require('../config/config');
 var SALT_WORK_FACTOR = 10;
 var JWT_EXPIRATION_TIME = '2h';
 
@@ -73,7 +72,7 @@ function encrypt(str) {
 
 function getTokenForUser(user, expiresIn) {
     // creates a token for the given user object
-    var token = jwt.sign({userName: user.userName}, config.jwtSecret, {
+    var token = jwt.sign({userName: user.userName}, process.env.JWT_SECRET, {
           expiresIn: expiresIn
         });
 

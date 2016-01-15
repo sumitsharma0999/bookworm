@@ -1,4 +1,3 @@
-var config = require('./config/config');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -12,8 +11,9 @@ var users = require('./routes/users');
 var apis = require('./routes/apis');
 
 var app = express();
+require('dotenv').load();
 
-mongoose.connect(config.dbstring);
+mongoose.connect(process.env.DB_STRING);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,14 +31,14 @@ var checkForAuthentication = function(req, res, next) {
     // (We would need the user to be authenticated for almost all scnearios except a
     // few e.g. adding a new user)
   
-    if(config.enableRouteProtection) {
+    if(process.env.ENABLE_ROUTE_PROTECTION) {
         if(req.url !== '/api/users/addUser' &&
            req.url !== '/api/users/authenticate') {
             // requester should provide an access token
             var token = req.headers['x-access-token'];
 
             if(token) {
-                jwt.verify(token, config.jwtSecret, function(err, decoded) {
+                jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
                     if (err) {
                         res.status(403);
                         return res.json({ success: false, message: 'Failed to authenticate token.' });
