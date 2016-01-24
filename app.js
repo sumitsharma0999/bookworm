@@ -35,11 +35,10 @@ app.use(function(req, res, next) {
 });
 
 var checkForAuthentication = function(req, res, next) {
-    // TODO: This should check if the user needs authentication for the specified url
-    // (We would need the user to be authenticated for almost all scnearios except a
-    // few e.g. adding a new user)
+
+    var routeProtectionEnabled = process.env.ENABLE_ROUTE_PROTECTION === "true";
   
-    if(process.env.ENABLE_ROUTE_PROTECTION) {
+    if(routeProtectionEnabled) {
         if(req.url !== '/api/users/addUser' &&
            req.url !== '/api/users/authenticate') {
             // requester should provide an access token
@@ -52,7 +51,7 @@ var checkForAuthentication = function(req, res, next) {
                         return res.json({ success: false, message: 'Failed to authenticate token.' });
                     } else {
                         // if everything is good, save to request for use in other routes
-                        req.decoded = decoded;
+                        req.user = decoded;
                         next();
                     }
                 });
