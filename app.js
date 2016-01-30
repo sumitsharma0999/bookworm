@@ -40,7 +40,8 @@ var checkForAuthentication = function(req, res, next) {
   
     if(routeProtectionEnabled) {
         if(req.url !== '/api/users/addUser' &&
-           req.url !== '/api/users/authenticate') {
+           req.url !== '/api/users/authenticate' &&
+           req.url !== '/') {
             // requester should provide an access token
             var token = req.headers['x-access-token'];
 

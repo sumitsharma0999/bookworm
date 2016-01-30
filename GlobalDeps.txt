@@ -1,0 +1,4 @@
+node-inspector: Debugging node app
+Grunt: Automation (lint, minifying etc)
+Yeoman: helps with generating client code (http://www.sitepoint.com/kickstart-your-angularjs-development-with-yeoman-grunt-and-bower/)
+Bower
