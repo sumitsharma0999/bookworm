@@ -8,9 +8,11 @@ var router = express.Router();
 
 /* GET books listing. */
 router.get('/availableBooks', function(req, res, next) {
-	AvailableBook.find({}, function(err, availableBooks) {
+	BookHelper.getBooksForUser().then(function(availableBooks) {
 		res.json(availableBooks);
-	});
+	}, function(error) {
+        res.json(error);
+    });
 });
 
 /* Add a new book */

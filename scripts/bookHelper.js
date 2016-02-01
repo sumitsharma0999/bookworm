@@ -17,6 +17,20 @@ function addBookToAvailableBooks(book) {
 	}
 }
 
+function getBooksForUser(user) {
+    var deferred = Q.defer();
+
+    // TODO: return only the books added by user
+    AvailableBook.find({}).lean().exec(function(err, availableBooks) {
+        if(err) {
+            deferred.reject(err);
+        }
+        deferred.resolve(availableBooks);
+    });
+
+    return deferred.promise;
+}
+
 function getAvailableBookFromJson(jsonObj) {
 	// Parses the jsonObj to check if it is in valid format
 	if(jsonObj)
@@ -194,6 +208,7 @@ function getSearchResults(searchRequest) {
 }
 
 module.exports = {
+    getBooksForUser: getBooksForUser,
     addBookToAvailableBooks: addBookToAvailableBooks,
     getAvailableBookFromJson: getAvailableBookFromJson,
     getBookTransactionFromJson: getBookTransactionFromJson,

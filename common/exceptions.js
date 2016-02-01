@@ -7,7 +7,7 @@ module.exports = {
         this.name = "InvalidCredentialsException";
         this.message = message || "User name and passowrd do not match";
     },
-    UserAlreadyExistsException: function InvalidCredentialsException(message) {
+    UserAlreadyExistsException: function UserAlreadyExistsException(message) {
         this.name = "UserAlreadyExistsException";
         this.message = message || "The userName already exists";
     }

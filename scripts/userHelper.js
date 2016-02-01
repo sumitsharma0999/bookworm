@@ -27,6 +27,8 @@ function addUser(user) {
                     var modelUser = new User({
                         userName: user.userName,
                         password: encryptedStr,
+                        email: user.email,
+                        phoneNumber: user.phoneNumber
                     });
 
                     modelUser.save(function(err) {

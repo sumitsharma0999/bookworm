@@ -30,15 +30,25 @@ html
                             span.icon-bar
                         a(class='navbar-brand', href='/#') Bookworm
                     #bs-example-navbar-collapse-1(class='collapse navbar-collapse')
-                        ul(class='nav navbar-nav')
+                        ul(class='nav navbar-nav navbar-right')
                             li
-                                a(href='/recipes/bbq') Search
+                                a(href='/search') Search
                             li
-                                a(href='/recipes/brunch') Add
-                            li
-                                a(href='/recipes/dessert')
-        block pageContent
+                                a(href='/add') Add
+                            if authorised
+                                li
+                                    a(href='/signout') Logout
+                            else
+                                li
+                                    a(href='/signup') Sign Up
+                                li
+                                    a(href='/signin') Log In
 
-    script(src='scripts/lib/require.js', data-main=starterFile)
+        block pageContent
+    div.data-island
+        block dataIsland
+
+    if starterFile
+        script(src='scripts/lib/require.js', data-main=starterFile)
 
 

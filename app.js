@@ -3,6 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 
@@ -20,10 +21,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // CORS Support
@@ -41,9 +43,15 @@ var checkForAuthentication = function(req, res, next) {
     if(routeProtectionEnabled) {
         if(req.url !== '/api/users/addUser' &&
            req.url !== '/api/users/authenticate' &&
-           req.url !== '/') {
+           req.url !== '/' &&
+           req.url !== '/signup' &&
+           req.url !== '/signin') {
+
             // requester should provide an access token
-            var token = req.headers['x-access-token'];
+            var token = req.headers['bookworm-access-token'];
+            if(!token) {
+                token = req.cookies.bookworm_token;
+            }
 
             if(token) {
                 jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {

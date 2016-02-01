@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 router.post('/authenticate', function(req, res, next) {
 	// Authenticates the given credentials and gives a token on succes
 
-	var user = getUserObjectFromJson(req.body);
+	var user = getSignInUserObjectFromJson(req.body);
 
 	if(user) {
         userHelper.autheticate(user).then(function(token) {
@@ -22,7 +22,7 @@ router.post('/authenticate', function(req, res, next) {
 		    res.json({ success: true, token: token });
 	  	}, function(err) {
             // See the type of error and set status appropriately
-            if(typeof err === Exceptions.InvalidCredentialsException) {
+            if(err.message === "InvalidCredentialsException") {
                 res.status(403);
             }
             else {
@@ -40,7 +40,7 @@ router.post('/authenticate', function(req, res, next) {
 router.post('/addUser', function(req, res, next) {
 	// Adds the specified user
 
-	var user = getUserObjectFromJson(req.body);
+	var user = getSignUpUserObjectFromJson(req.body);
 
 	if(user) {
         userHelper.addUser(user).then(function(modelUser) {
@@ -49,22 +49,45 @@ router.post('/addUser', function(req, res, next) {
 		    res.json({ success: true, user: modelUser });
 	  	}, function(err) {
             // See the type of error and set status appropriately
-            if(typeof err === Exceptions.UserAlreadyExistsException) {
+            if(err.name === "UserAlreadyExistsException") {
                 res.status(400);
             }
             else {
                 res.status(500);
             }
-            res.json(err);
+            res.json({success: false, message: err.message ? err.message : err});
         });
 	}
 	else {
 		res.status(400);
-		res.send('Invalid parameters');
+		res.json({success: false, message: 'Invalid parameters'});
 	}
 });
 
-function getUserObjectFromJson(jsonObj) {
+function getSignUpUserObjectFromJson(jsonObj) {
+	// Parses the jsonObj to check if it is in valid format
+	if(jsonObj)
+	{
+		var userName, password, email, phoneNumber;
+
+		userName = jsonObj.userName;
+		password = jsonObj.password;
+        email = jsonObj.email;
+        phoneNumber = jsonObj.phoneNumber;
+
+		if(userName && password && email && phoneNumber) {
+			return {
+				userName: userName,
+			    password: password,
+                email: email,
+			    phoneNumber: phoneNumber
+			};
+		}
+	}
+	return null;
+}
+
+function getSignInUserObjectFromJson(jsonObj) {
 	// Parses the jsonObj to check if it is in valid format
 	if(jsonObj)
 	{
@@ -76,7 +99,7 @@ function getUserObjectFromJson(jsonObj) {
 		if(userName && password) {
 			return {
 				userName: userName, 
-			    password: password,
+			    password: password
 			};
 		}
 	}
