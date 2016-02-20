@@ -16,6 +16,7 @@ define(function (require) {
                     }).done(function(response) {
                         // Set the cookie here to store the token
                         document.cookie = "bookworm_token="+response.token;
+                        document.cookie= "bookwormCurrentUser="+this.userName();
                         window.location.assign("/myBooks");
                     }.bind(this)
                 ).fail(function(response) {

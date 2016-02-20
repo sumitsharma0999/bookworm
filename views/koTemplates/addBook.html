@@ -1,0 +1,52 @@
+<script id='add-book-template' type="text/html">
+    <div class='row add-book-form'>
+        <div class='col-sm-4 col-sm-offset-4'>
+            <form class="form-horizontal" action="" method="POST">
+              <fieldset>
+                <div id="legend">
+                  <legend class="">Add a Book</legend>
+                </div>
+                <div class="alert alert-success" data-bind="visible: addSuccess">
+                Book <strong data-bind="text: bookId"></strong> added successfully.
+            </div>
+            <div class="alert alert-danger" data-bind="visible: errorMessage(), text: errorMessage">
+            </div>
+                <div class="control-group">
+                  <label class="control-label" for="bookId">Id</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: bookId" type="text" id="bookId" name="bookId" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="city">City</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: city" type="text" id="city" name="city" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="latitude">Latitude</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: latitude" type="text" id="latitude" name="latitude" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="longitude">Longitude</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: longitude" type="text" id="longitude" name="longitude" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <!-- Button -->
+                  <div class="controls">
+                    <button data-bind="click: sendRequest" class="btn btn-success">Add</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+</script>

@@ -27,14 +27,13 @@ router.post('/availableBooks/add', function(req, res, next) {
 		res.json(exception.message);
 		return;
 	}
-    try {
-        BookHelper.addBookToAvailableBooks(book);
+
+    BookHelper.addBookToAvailableBooks(book).then(function(){
         res.json({ success: true });
-    }
-    catch(error) {
+    }).catch(function(error) {
         res.status(500);
         res.json(error);
-    }
+    });
 });
 
 /* Get all the transactions */

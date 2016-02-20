@@ -5,16 +5,24 @@ var GeoLocationHelper = require('./geoLocationHelper');
 var Q = require('q');
 
 function addBookToAvailableBooks(book) {
+    var deferred = Q.defer();
+
     // Given the AvailableBook object, adds the given book to list of available books
 	if(book) {
         book.save(function(err) {
             if (err) {
-                throw err;
+                deferred.reject(err);
 		    }
 
 		    console.log('Book "' + book.bookId + '" added with providerId "' + book.providerId + '"');
+            deferred.resolve();
 	  	});
 	}
+    else {
+        deferred.reject(Exceptions.DataInvalidException("Book data is invalid"));
+    }
+
+    return deferred.promise;
 }
 
 function getBooksForUser(user) {
@@ -191,7 +199,7 @@ function getSearchResults(searchRequest) {
     if(searchRequest) {
         // Get available books with given id which are in the same city, and select their record id and locations.
         // 'lean' is required to convert from Mongoose model objects into normal javascript objects
-        AvailableBook.find({'bookId': searchRequest.bookId, 'location.city': searchRequest.location.city}, '_id location').lean().exec(function(err, results){
+        AvailableBook.find({'bookId': searchRequest.bookId, 'location.city': searchRequest.location.city}, '_id location providerId').lean().exec(function(err, results){
            if(err) {
                deferred.reject("Internal Server Error");
            }

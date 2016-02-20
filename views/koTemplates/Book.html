@@ -1,0 +1,18 @@
+<script id="book-view-template" type="text/html">
+    <div class="book-view">
+        <div class="header">
+            <strong class="id" data-bind="text: bookId"></strong>
+        </div>
+        <div class="owner" data-bind="text: providerId"></div>
+        <div class="location">
+            <span data-bind="text: longitude"></span>
+            <span data-bind="text: latitude"></span>
+        </div>
+    </div>
+</script>
+
+<script id="book-list-view-template" type="text/html">
+    <ul class="list-group book-list" data-bind="foreach:singleBookVMs">
+        <li class="list-group-item book-list-entry" data-bind="template:{name: 'book-view-template', data: $data}"></ul>
+    </ul>
+</script>

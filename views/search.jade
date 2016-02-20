@@ -1,0 +1,6 @@
+extends layout
+
+block pageContent
+  include ./koTemplates/search.html
+  div.main-content
+    div(data-bind="template: {name: 'search-template'}")

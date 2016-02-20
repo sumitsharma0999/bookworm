@@ -56,7 +56,7 @@ var checkForAuthentication = function(req, res, next) {
             if(token) {
                 jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
                     if (err) {
-                        res.status(403);
+                        res.status(401);
                         return res.json({ success: false, message: 'Failed to authenticate token.' });
                     } else {
                         // if everything is good, save to request for use in other routes
@@ -65,7 +65,7 @@ var checkForAuthentication = function(req, res, next) {
                     }
                 });
             } else {
-                res.status(403); // Permission denied
+                res.status(401); // Permission denied
                 res.json({ success: false, message: 'You should be logged in first' });
             }
         }

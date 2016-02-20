@@ -17,13 +17,28 @@ router.get('/signin', function(req, res, next) {
   res.render('signin', { title: 'Log in to bookworm account' , starterFile: 'scripts/SignIn.View'});
 });
 
-/* Sign In page. */
+/* Show my books. */
 router.get('/myBooks', function(req, res, next) {
     BookHelper.getBooksForUser().then(function(availableBooks) {
-        res.render('myBooks', { title: 'My books', myBooksData: JSON.stringify(availableBooks)});
+        res.render('myBooks', { title: 'My books', starterFile: 'scripts/MyBooks.View', myBooksData: JSON.stringify(availableBooks)});
 	}, function(error) {
         res.redner('error');
     });
+});
+
+/* Add book page. */
+router.get('/add', function(req, res, next) {
+    if(user) {
+        res.render('addBook');
+    }
+    else {
+        res.status(401);
+        res.json("You should be logged in");
+    }
+});
+
+router.get('/search', function(req, res, next) {
+    res.render('search', { title:'Find you favorite books nearby', starterFile: 'scripts/Search.View'});
 });
 
 

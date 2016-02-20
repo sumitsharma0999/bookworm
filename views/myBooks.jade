@@ -2,6 +2,12 @@ extends layout
 
 block pageContent
   h1 My books
+  include ./koTemplates/addBook.html
+  include ./koTemplates/Book.html
+  div.add-container
+    div(data-bind="template:{name: 'add-book-template'}")
+  div.my-book-container
+    div(data-bind="template:{name: 'book-list-view-template'}")
 
 block dataIsland
-    script(type="application/json", class="myBooks")= myBooksData
+    script(type="application/json", class="myBooks")!= myBooksData

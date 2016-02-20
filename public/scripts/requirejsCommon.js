@@ -6,7 +6,8 @@
 //except for 'app' ones, which are in a sibling
 //directory.
 requirejs.config({
-    baseUrl: 'scripts/lib',
+    baseUrl: 'scripts',
     paths: {
+        "jquery": "lib/jquery-2.2.0"
     }
 });

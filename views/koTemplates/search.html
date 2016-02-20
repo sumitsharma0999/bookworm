@@ -1,0 +1,54 @@
+<script id="search-template" type="text/html">
+    <div class='row add-book-form'>
+        <div class='col-sm-4 col-sm-offset-4'>
+            <form class="form-horizontal" action="" method="POST">
+              <fieldset>
+                <div id="legend">
+                  <legend class="">Search a Book</legend>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="bookId">Id</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: bookId" type="text" id="bookId" name="bookId" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="city">City</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: city" type="text" id="city" name="city" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="latitude">Latitude</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: latitude" type="text" id="latitude" name="latitude" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="longitude">Longitude</label>
+                  <div class="controls">
+                    <input class="form-control" data-bind="value: longitude" type="text" id="longitude" name="longitude" placeholder="" class="input-xlarge">
+                  </div>
+                </div>
+
+                <div class="control-group">
+                  <!-- Button -->
+                  <div class="controls">
+                    <button data-bind="click: performSearch" class="btn btn-success">Search</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+    <ul class="list-group result-list" data-bind="foreach: searchResults">
+        <li class="list-group-item">
+            <div class="owner" data-bind="text: providerId"></div>
+            <div class="distance" data-bind="text: distance"></div>
+        </li>
+    </ul>
+    </div>
+</script>
