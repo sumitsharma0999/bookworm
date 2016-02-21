@@ -8,6 +8,6 @@
 requirejs.config({
     baseUrl: 'scripts',
     paths: {
-        "jquery": "lib/jquery-2.2.0"
+        "jquery": "lib/jquery-2.2.0",
     }
 });

@@ -1,0 +1,18 @@
+<script id="chat-template" type="text/html">
+    <div class="messages-list" data-bind="foreach: messages">
+        <div class="message-container">
+            <div class="message" data-bind="css: {right: isMine}">
+                <div class="message-text" data-bind="text: messageText"></div>
+                <div class="message-time">
+                    <span data-bind="text: messageTime.getHours()"></span>
+                    :
+                    <span data-bind="text: messageTime.getMinutes()"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="new-message">
+        <input type="text" data-bind="value: newMessageText">
+        <input class="btn btn-default" type="button" value="Send" data-bind="click: sendNewMessage.bind($data)">
+    </div>
+</script>

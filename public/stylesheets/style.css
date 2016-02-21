@@ -6,3 +6,26 @@ body {
 a {
   color: #00B7FF;
 }
+
+.chat-box-container {
+    position: fixed;
+    bottom: 0px;
+    right: 100px;
+    width: 300px;
+    border: 1px solid;
+}
+
+.chat-box-container .messages-list{
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.chat-box-container .messages-list .message-container {
+    width: 100%;
+}
+
+.chat-box-container .messages-list .right{
+    background-color: azure
+}
+
+.chat-box-container

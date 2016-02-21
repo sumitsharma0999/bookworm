@@ -2,5 +2,8 @@ extends layout
 
 block pageContent
   include ./koTemplates/search.html
+  include ./koTemplates/chat.html
   div.main-content
     div(data-bind="template: {name: 'search-template'}")
+  div.chat-box-container
+    div(data-bind="template: {name: 'chat-template'}")
