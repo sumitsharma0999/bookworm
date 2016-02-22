@@ -5,5 +5,5 @@ requirejs(['requirejsCommon', 'SignUp.ViewModel' ], function (common, SignUpView
 
     var signUpViewModel = new SignUpViewModel.SignUpViewModel();
 
-    ko.applyBindings(signUpViewModel, $.find('.signup-form')[0]);
+    ko.applyBindings(signUpViewModel, $('.main-content')[0]);
 });

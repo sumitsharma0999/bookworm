@@ -1,4 +1,5 @@
-<div class='row signup-form'>
+<script id="registeration-template" type="text/html">
+    <div class='row signup-form'>
     <div class='col-sm-4 col-sm-offset-4'>
         <form class="form-horizontal" action="" method="POST">
           <fieldset>
@@ -6,7 +7,7 @@
               <legend class="">Register</legend>
             </div>
             <div class="alert alert-success" data-bind="visible: registerationSuccessful">
-                <strong>Congratulations!</strong> You have successfully signed up. Continue to <a href="/login">login</a>.
+                <strong>Congratulations!</strong> You have successfully signed up. Continue to <a href="/signin">login</a>.
             </div>
             <div class="alert alert-danger" data-bind="visible: errorMessage(), text: errorMessage">
             </div>
@@ -65,3 +66,4 @@
         </form>
     </div>
 </div>
+</script>

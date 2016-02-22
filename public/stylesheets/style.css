@@ -8,11 +8,10 @@ a {
 }
 
 .chat-box-container {
-    position: fixed;
     bottom: 0px;
-    right: 100px;
-    width: 300px;
+    right: 0px;
     border: 1px solid;
+    background-color: white;
 }
 
 .chat-box-container .messages-list{

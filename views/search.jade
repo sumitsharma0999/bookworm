@@ -5,5 +5,5 @@ block pageContent
   include ./koTemplates/chat.html
   div.main-content
     div(data-bind="template: {name: 'search-template'}")
-  div.chat-box-container
+  div.chat-box-container.col-xs-11.col-md-3(style="position: fixed")
     div(data-bind="template: {name: 'chat-template'}")
